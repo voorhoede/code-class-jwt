@@ -3,10 +3,7 @@
   "version": "0.1.0",
   "description": "Node.js app and exercises to learn about JWT",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/voorhoede/code-class-jwt.git"
-  },
+  "repository": "voorhoede/code-class-jwt",
   "author": {
     "name": "Anne Fortuin",
     "url": "voorhoede.nl"
