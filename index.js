@@ -4,9 +4,12 @@ const fs = require('fs').promises
 const http = require('http')
 const url = require('url')
 
+const { sign, verify } = require('jws')
+
 // Constants
 const config = {
 	PORT: process.argv[2] || 8080,
+	SECRET: process.env.JWT_SECRET,
 }
 const routes = {
 	HOME: 'home',
@@ -43,7 +46,7 @@ function router(_url) {
 			const { handle } = await parseBody(req)
 			const object = {}
 			if (handle === 'john') {
-				// send jwt!
+				object.auth_token = createToken(handle)
 			} else {
 				res.statusCode = 401
 			}
@@ -57,6 +60,17 @@ function router(_url) {
 			res.end()
 		}
 	}[routeMap[route] || routes.NOT_FOUND]
+}
+
+function createToken(username) {
+	return sign({
+	    header: { alg: 'HS256', typ: 'JWT', },
+	    payload: {
+	        exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 14),
+	      	username,
+	    },
+	    secret: config.SECRET,
+	})
 }
 
 /**
@@ -102,6 +116,10 @@ async function render(body) {
  * Run a server on localhost at user-defined or default port.
  */
 try {
+	if (!config.SECRET) {
+		console.log('You should set a secret; check the readme!')
+		process.exit(0)
+	}
 	const server = http.createServer((req, res) => {
 		router(req.url)(req, res)
 	}).listen(config.PORT, () => {
