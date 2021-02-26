@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
-// Modules
+const fs = require('fs').promises
 const http = require('http')
 const url = require('url')
-const fs = require('fs').promises
 
 // Constants
 const config = {
@@ -42,13 +41,14 @@ function router(_url) {
 				res.end()
 			}
 			const { handle } = await parseBody(req)
+			const object = {}
 			if (handle === 'john') {
 				// send jwt!
+			} else {
+				res.statusCode = 401
 			}
-			res.writeHead(200, {
-				'Content-Type': 'application/json',
-			})
-			res.write(JSON.stringify({ status: 200 }))
+			res.setHeader('Content-Type', 'application/json')
+			res.write(JSON.stringify(object))
 			res.end()
 		},
 		async notfound(req, res) {
