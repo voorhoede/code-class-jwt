@@ -11,5 +11,8 @@
     "name": "Anne Fortuin",
     "url": "voorhoede.nl"
   },
-  "license": "mit"
+  "license": "mit",
+  "dependencies": {
+    "jws": "^4.0.0"
+  }
 }
