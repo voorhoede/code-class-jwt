@@ -12,6 +12,7 @@ const config = {
 	SECRET: process.env.JWT_SECRET,
 }
 const routes = {
+	ACCOUNT: 'account',
 	HOME: 'home',
 	LOGIN: 'login',
 	NOT_FOUND: 'notfound'
@@ -30,10 +31,11 @@ function router(_url) {
 	const routeMap = {
 		'/': routes.HOME,
 		'/login': routes.LOGIN,
+		'/account': routes.ACCOUNT,
 	}
 	return {
 		async home(req, res) {
-			res.write(await render`<form method=post action=login><label>Handle</label><input name=handle><button>Join</button></form>`)
+			res.write(await render`<p>Log in!</p><form method=post action=login><label>Username</label><input name=username><button>Join</button></form>`)
 			res.end()
 		},
 		async login(req, res) {
@@ -43,15 +45,19 @@ function router(_url) {
 				})
 				res.end()
 			}
-			const { handle } = await parseBody(req)
+			const { username } = await parseBody(req)
 			const object = {}
-			if (handle === 'john') {
-				object.auth_token = createToken(handle)
+			if (username === 'john') {
+				object.auth_token = createToken(username)
 			} else {
 				res.statusCode = 401
 			}
 			res.setHeader('Content-Type', 'application/json')
 			res.write(JSON.stringify(object))
+			res.end()
+		},
+		async account(req, res) {
+			res.write(await render`Je bent er! <a href="/?logout">Uitloggen</a>`)
 			res.end()
 		},
 		async notfound(req, res) {
