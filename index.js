@@ -23,8 +23,8 @@ const routes = {
  * @param {String} url
  * @returns {Function}
  */
-function router(url) {
-	const route = url.parse(url).pathname
+function router(_url) {
+	const route = url.parse(_url).pathname
 	const routeMap = {
 		'/': routes.HOME,
 		'/login': routes.LOGIN,
