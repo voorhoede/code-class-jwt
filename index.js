@@ -16,32 +16,6 @@ const routes = {
 }
 
 /**
- * Parses an http request’s body into an object literal, where a field’s name
- * becomes the key and its value the value. Since the request’s body is received
- * as a stream and its interface is event based, we wrap it in a Promise for
- * simplicity and reusability.
- *
- * Example of request data in -> object out:
- *   username=azd&password=hunter2 -> { username: 'azd', password: 'hunter2' }
- *
- * @param  {HTTP Request} req
- * @return {Promise}
- */
-function parseBody(req) {
-	return new Promise((resolve, reject) => {
-		let body = ''
-		req.on('data', chunk => body += chunk)
-		req.on('end', () => {
-			return resolve(body.split(/&/).reduce((collection, item) => {
-				const [ key, val ] = item.split(/=/)
-				return { ...collection, [key]: val }
-			}, {}))
-		})
-		req.on('error', reject)
-	})
-}
-
-/**
  * Implements routing using the request.url as input. Returns a function that
  * takes an http request and response object and does http-like stuff. If the
  * route is not defined, a 404 page is rendered.
@@ -83,6 +57,32 @@ function router(_url) {
 			res.end()
 		}
 	}[routeMap[route] || routes.NOT_FOUND]
+}
+
+/**
+ * Parses an http request’s body into an object literal, where a field’s name
+ * becomes the key and its value the value. Since the request’s body is received
+ * as a stream and its interface is event based, we wrap it in a Promise for
+ * simplicity and reusability.
+ *
+ * Example of request data in -> object out:
+ *   username=azd&password=hunter2 -> { username: 'azd', password: 'hunter2' }
+ *
+ * @param  {HTTP Request} req
+ * @return {Promise}
+ */
+function parseBody(req) {
+	return new Promise((resolve, reject) => {
+		let body = ''
+		req.on('data', chunk => body += chunk)
+		req.on('end', () => {
+			return resolve(body.split(/&/).reduce((collection, item) => {
+				const [ key, val ] = item.split(/=/)
+				return { ...collection, [key]: val }
+			}, {}))
+		})
+		req.on('error', reject)
+	})
 }
 
 /**
