@@ -21,7 +21,20 @@
 			}
 		</style>
 		<script>
+			const routes = {
+				HOME: 'home',
+				ACCOUNT: 'account',
+			}
+			const routeMap = {
+				'/': routes.HOME,
+				'/account': routes.ACCOUNT,
+			}
+
 			window.addEventListener('load', () => {
+				const routeId = routeMap[window.location.pathname]
+				const template = document.querySelector(`#${routeId}`)
+				document.body.appendChild(template.content.cloneNode(true))
+
 				const form = document.forms[0]
 				if (window.location.search === '?logout') {
 					window.sessionStorage.removeItem('auth_token')
@@ -49,8 +62,17 @@
 	</head>
 	<body>
 		<h1>Code Class JWT</h1>
-		<article>
-			${ body }
-		</article>
+
+		<template id="home">
+			<form method=post action=login>
+				<label>Username</label>
+				<input name=username>
+				<button>Join</button>
+			</form>
+		</template>
+
+		<template id="account">
+			Je bent er! <a href="/?logout">Uitloggen</a>
+		</template>
 	</body>
 </html>

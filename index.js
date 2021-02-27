@@ -35,7 +35,7 @@ function router(_url) {
 	}
 	return {
 		async home(req, res) {
-			res.write(await render`<p>Log in!</p><form method=post action=login><label>Username</label><input name=username><button>Join</button></form>`)
+			res.write(await page())
 			res.end()
 		},
 		async login(req, res) {
@@ -57,12 +57,12 @@ function router(_url) {
 			res.end()
 		},
 		async account(req, res) {
-			res.write(await render`Je bent er! <a href="/?logout">Uitloggen</a>`)
+			res.write(await page())
 			res.end()
 		},
 		async notfound(req, res) {
 			res.statusCode = 404
-			res.write(await render`Page not found`)
+			res.write(await page())
 			res.end()
 		}
 	}[routeMap[route] || routes.NOT_FOUND]
@@ -106,16 +106,12 @@ function parseBody(req) {
 }
 
 /**
- * Render an HTML document. Reads a template file from disk and evaluates it
- * to a template string. This function should be used as a tagged template
- * (ex: render`Body text`). Note that input is not sanitized.
+ * Reads an HTML file from disk and returns it as a string
  *
- * @param  {String} body
- * @return {Tagged template}
+ * @return {String}
  */
-async function render(body) {
-	const template = await fs.readFile(`./template.tpl`, 'utf8')
-	return eval(`\`${template}\``)
+async function page() {
+	return await fs.readFile(`./index.html`, 'utf8') 
 }
 
 /**
