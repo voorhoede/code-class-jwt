@@ -4,11 +4,12 @@
 		<title>Code class JWT</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQEAYAAABPYyMiAAAABmJLR0T///////8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAF0lEQVRIx2NgGAWjYBSMglEwCkbBSAcACBAAAeaR9cIAAAAASUVORK5CYII=" rel="icon" type="image/x-icon" />
+		<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Ctext%20x='0'%20y='14'%3E🤓%3C/text%3E%3C/svg%3E" type="image/svg+xml" />
 		<style>
 			body, input, button {
 				font: 1em/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 				font-feature-settings: "kern", "liga";
+				letter-spacing: 0.03em;
 			}
 			h1, h2, h3, p, figure, ul, ol {
 				margin: 0 0 1rem;
@@ -19,60 +20,160 @@
 			label, button {
 				display: block;
 			}
+			p {
+				max-width: 32rem;
+			}
+			[data-email] {
+				background: hsl(55deg 100% 50% / 50%);
+			}
 		</style>
 		<script>
-			const routes = {
-				HOME: 'home',
-				ACCOUNT: 'account',
-			}
-			const routeMap = {
-				'/': routes.HOME,
-				'/account': routes.ACCOUNT,
-			}
-
 			window.addEventListener('load', () => {
-				const routeId = routeMap[window.location.pathname]
-				const template = document.querySelector(`#${routeId}`)
-				document.body.appendChild(template.content.cloneNode(true))
-
-				const form = document.forms[0]
-				if (window.location.search === '?logout') {
-					window.sessionStorage.removeItem('auth_token')
+				/**
+				 * Initialize router and render a route based on window.location
+				 */
+				function initRouter() {
+					const route = {
+						'/': 'home',
+						'/thanks': 'thanks',
+						'/download': 'download',
+					}[window.location.pathname] || 'notfound'
+					render(route)
 				}
-				if (form) {
-					form.addEventListener('submit', event => {
-						event.preventDefault()
-						window.fetch(form.action, {
-							method: 'post',
-							body: new URLSearchParams(new FormData(form)) // https://github.com/github/fetch/issues/263#issuecomment-209530977
-						})
-						.then(response => response.json())
-						.then(data => {
-							if (data.auth_token) {
-								window.sessionStorage.setItem('auth_token', data.auth_token)
-								window.location.href = '/account'
-							} else {
-								window.location.reload()
-							}
-						})
+
+				/**
+				 * Initialize form if present and add handler
+				 */
+				function initForm() {
+					const form = document.forms[0]
+					if (form) {
+						form.addEventListener('submit', handleForm)
+					}
+				}
+
+				/**
+				 * $RUN
+				 */
+				initRouter()
+				initForm()
+
+				/**
+				 * Renders a template inside the data-app container. The `route`
+				 * parameter corresponds to the template id.
+				 *
+				 * @param  {String} route
+				 */
+				function render(route) {
+					const template = document.querySelector(`#${route}`)
+					const container = document.querySelector('[data-app]')
+					while (container.firstChild) container.removeChild(container.firstChild)
+					container.appendChild(template.content.cloneNode(true))
+				}
+
+				/**
+				 * Handles the signup form. It interprets the actual form data
+				 * and fetches the form’s endpoint from our server. The response
+				 * should contain a (valid) jwt that is then used to create a
+				 * download URL.
+				 *
+				 * @param  {Event} event
+				 */
+				async function handleForm(event) {
+					event.preventDefault()
+					const form = event.target
+					const response  = await window.fetch(form.action, {
+						method: form.method,
+						body: new URLSearchParams(new FormData(form)) // https://github.com/github/fetch/issues/263#issuecomment-209530977
 					})
+					if (response.ok) {
+						let data = await response.json()
+						const payload = getJWTPayload(data.token)
+						if (payload.email) {
+							render('thanks')
+							dynamizeThanks(payload.email, data.token)
+						} else {
+							render('download')
+							console.error('Email was missing from JWT', data.token)
+						}
+					} else {
+						try {
+							let data = await response.json()
+							console.error(data)
+						} catch(error) {
+							console.error(response)
+						} finally {
+							render('error')
+						}
+					}
+				}
+
+				/**
+				 * Get payload from a JWT as an object
+				 *
+				 * @param  {String} jwt
+				 * @return {Object}
+				 */
+				function getJWTPayload(jwt) {
+					const payloadPart = jwt.split(/\./)[1]
+					try {
+						return JSON.parse(atob(payloadPart))
+					} catch(error) {
+						render('error')
+						console.error(error)
+						return {}
+					}
+				}
+
+				/**
+				 * Add some dynamic content to the 'thanks'-template.
+				 *
+				 * @param  {String} email
+				 * @param  {String} token
+				 */
+				function dynamizeThanks(email, token) {
+					const downloadElement = document.querySelector('[data-tokenize]')
+					const emailElement = document.querySelector('[data-email]')
+					downloadElement.setAttribute('href', `${downloadElement.getAttribute('href')}?${token}`)
+					emailElement.innerHTML = email
+					window.history.pushState({}, '', 'thanks')
 				}
 			})
 		</script>
 	</head>
 	<body>
 		<h1>Code Class JWT</h1>
+		<main data-app></main>
 
 		<template id="home">
-			<form method=post action=login>
-				<label>Username</label>
-				<input name=username>
-				<button>Join</button>
+			<h2>Enter email for ✨FREE✨ download!</h2>
+			<form method=post action=signup>
+				<label>E-mail address</label>
+				<input name=email type=email>
+				<button>GET STUFF</button>
 			</form>
 		</template>
 
-		<template id="account">
-			Je bent er! <a href="/?logout">Uitloggen</a>
+		<template id="thanks">
+			<h2>Thanks!</h2>
+			<p>We will never use your email <span data-email></span> for Facebook retargeting campaigns or Google ad personalization or sell it to recruiters on LinkedIn or anything really 🤗</p>
+			<a href="/download" data-tokenize>&rarr; Download lootbox here</a></p>
+			<p><a href="/">&larr; Back to safety</a></p>
+		</template>
+
+		<template id="download">
+			<h2>Oh no 🙉</h2>
+			<p>Your download link was either invalid or has expired.</p>
+			<p><a href="/">⭯ Try again</a></p>
+		</template>
+
+		<template id="notfound">
+			<h2>Page not found</h2>
+			<p><a href="/">&larr; Back</a></p>
+		</template>
+
+		<template id="error">
+			<h2>Something errored, check console</h2>
+			<p><a href="/">⭯ Try again</a></p>
 		</template>
 	</body>
 </html>
