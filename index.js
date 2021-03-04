@@ -138,9 +138,9 @@ function verifyToken(token) {
 function createToken(email) {
 	try {
 		return sign({
-    		header: {},  // Exercise 2
-    		payload: {}, // Hint: look at the `config` at the top of this file
-    		secret: ''   // <- that’s not very secret is it
+			header: {},  // Exercise 2
+			payload: {}, // Hint: look at the `config` at the top of this file
+			secret: ''   // <- that’s not very secret is it
 		})
 	} catch(error) {
 		console.error(error)
