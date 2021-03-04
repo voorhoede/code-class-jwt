@@ -119,6 +119,9 @@ function allowPost(req, res) {
  * @return {Boolean}
  */
 function verifyToken(token) {
+	// verify throws when `token` is null, but url.parse stupidly returns null
+	// instead of undefined or an empty string if no query is present in the url
+	// so we explicitly check for null and return false immediately
 	if (token === null) return false
 	if (verify(token, config.ALG, config.SECRET)) {
 		const { exp: expires } = decode(token).payload
