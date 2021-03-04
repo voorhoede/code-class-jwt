@@ -124,7 +124,7 @@ function verifyToken(token) {
 	// so we explicitly check for null and return false immediately
 	if (token === null) return false
 	if (verify(token, config.ALG, config.SECRET)) {
-		// Exercise 2
+		// Exercise 3
 		// You should check for an expiration claim. Perhaps the decode
 		// function can be of help?
 		return true
@@ -145,7 +145,7 @@ function createToken(email) {
 				alg: config.ALG,
 				typ: 'JWT',
 			},
-			payload: { // Exercise 2; go add a claim here
+			payload: { // Exercise 3; go add a claim here
 			  	email,
 			},
 			secret: config.SECRET,
