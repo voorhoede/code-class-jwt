@@ -134,17 +134,22 @@ function verifyToken(token) {
  * @return {String}
  */
 function createToken(email) {
-	return sign({
-	    header: {
-	    	alg: config.ALG,
-	    	typ: 'JWT',
-	    },
-	    payload: {
-	        exp: Math.floor(Date.now()) + 5000, // 5 seconds
-	      	email,
-	    },
-	    secret: config.SECRET,
-	})
+	try {
+		return sign({
+			header: {
+				alg: config.ALG,
+				typ: 'JWT',
+			},
+			payload: {
+				exp: Math.floor(Date.now()) + 5000, // 5 seconds
+			  	email,
+			},
+			secret: config.SECRET,
+		})
+	} catch(error) {
+		console.error(error)
+		return ''
+	}
 }
 
 /**
