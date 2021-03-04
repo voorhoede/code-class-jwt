@@ -124,8 +124,10 @@ function verifyToken(token) {
 	// so we explicitly check for null and return false immediately
 	if (token === null) return false
 	if (verify(token, config.ALG, config.SECRET)) {
-		const { exp: expires } = decode(token).payload
-		return expires > Date.now()
+		// Exercise 2
+		// You should check for an expiration claim. Perhaps the decode
+		// function can be of help?
+		return true
 	}
 	return false
 }
@@ -143,8 +145,7 @@ function createToken(email) {
 				alg: config.ALG,
 				typ: 'JWT',
 			},
-			payload: {
-				exp: Math.floor(Date.now()) + 5000, // 5 seconds
+			payload: { // Exercise 2; go add a claim here
 			  	email,
 			},
 			secret: config.SECRET,
