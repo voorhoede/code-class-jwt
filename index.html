@@ -26,6 +26,9 @@
 			[data-email] {
 				background: hsl(55deg 100% 50% / 50%);
 			}
+			a {
+				color: blue;
+			}
 		</style>
 		<script>
 			window.addEventListener('load', () => {
@@ -163,7 +166,7 @@
 		<template id="download">
 			<h2>Oh no 🙉</h2>
 			<p>Your download link was either invalid or has expired.</p>
-			<p><a href="/">⭯ Try again</a></p>
+			<p><a href="/">&circlearrowleft; Try again</a></p>
 		</template>
 
 		<template id="notfound">
@@ -173,7 +176,7 @@
 
 		<template id="error">
 			<h2>Something errored, check console</h2>
-			<p><a href="/">⭯ Try again</a></p>
+			<p><a href="/">&circlearrowleft; Try again</a></p>
 		</template>
 	</body>
 </html>
