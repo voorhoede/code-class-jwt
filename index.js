@@ -124,8 +124,7 @@ function verifyToken(token) {
 	// so we explicitly check for null and return false immediately
 	if (token === null) return false
 	if (verify(token, config.ALG, config.SECRET)) {
-		const { exp: expires } = decode(token).payload
-		return expires > Date.now()
+		return true
 	}
 	return false
 }
@@ -139,15 +138,9 @@ function verifyToken(token) {
 function createToken(email) {
 	try {
 		return sign({
-			header: {
-				alg: config.ALG,
-				typ: 'JWT',
-			},
-			payload: {
-				exp: Math.floor(Date.now()) + 5000, // 5 seconds
-			  	email,
-			},
-			secret: config.SECRET,
+			header: {},
+			payload: {},
+			secret: '',
 		})
 	} catch(error) {
 		console.error(error)
