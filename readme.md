@@ -21,7 +21,7 @@ Replace `<your secret string>` with your secret string. [Inspiration here](https
 
 ## Presentation
 
-The presentation in Markdown format can be found [here](presentation.md).
+The code class presentation about JWT, its features, uses and caveats in Markdown format can be found [here](presentation.md).
 
 ## Exercises
 
