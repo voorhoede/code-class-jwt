@@ -165,7 +165,7 @@ The shortness of these claims are to keep the bytesize of the JWT down somewhat.
   "aud": "admins",
   "exp": 1614890846081,
   "jti": 1,
-  "username": "anne@voorhoede.nl",
+  "username": "me@example.com",
   "role": "plumber"
 }
 ```
