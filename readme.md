@@ -19,6 +19,10 @@ $ export JWT_SECRET=<your secret string>
 
 Replace `<your secret string>` with your secret string. [Inspiration here](https://randompassphrasegenerator.com/).
 
+## Presentation
+
+The presentation in Markdown format can be found [here](presentation.md).
+
 ## Exercises
 
 The `main` branch is 'broken' and will be fixed in exercises 2 and 3. Check out branches `exercise2` and `exercise3` for a good starting point for those. Check out branch `solution` for a working version.
