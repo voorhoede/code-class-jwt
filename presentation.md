@@ -1,4 +1,4 @@
-# !["The Real JWT Code Class"](header.svg)
+!["The Real JWT Code Class"](header.svg)
 
 ## What is JWT
 
@@ -102,7 +102,7 @@ const myJwt = `${jwtHeader}.${jwtPayload}.${signature}`;
 
 \*) Because 26 × 2 + 10 = 62 + 2 = 64
 
-## Why Base64
+## Why Base64?
 
 [Because it’s safe against stupid robots](https://stackoverflow.com/a/3538079).
 
