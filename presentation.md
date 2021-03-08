@@ -3,7 +3,7 @@
 ## What is JWT
 
 - JSON Web Token
-- Internetstandard: RFC 7519
+- Internet standard: [RFC 7519](https://tools.ietf.org/html/rfc7519)
 
 > a standard for safely passing claims in space constrained environments
 
@@ -120,7 +120,7 @@ When verifying these parts, we can make sure the JWT was not tampered with betwe
 
 ## Why is this important?
 
-Even though the header and payload can be decoded and aren’t secure _at all_, changing them without re-signing the JWT will make the JWT fail validation. The verifying agent (a server) can then say: this has been tampered with, I am not going to authorise your.
+Even though the header and payload can be decoded and aren’t secure _at all_, changing them without re-signing the JWT will make the JWT fail validation. The verifying agent (a server) can then say: this has been tampered with, I am not going to authorise you.
 
 ## The header
 
