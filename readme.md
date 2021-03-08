@@ -2,6 +2,8 @@
 
 > Node.js app and exercises to learn about JWT
 
+What are JSON Web Tokens (JWT)? What are its practical uses, and how to properly set up a server-client relationship to work with JWT? In this code class, you get hands on JWT signing, decoding and verification, and we discuss common misconceptions and best practices for front-end development.
+
 ## Usage
 
 Install dependencies and run the app:
@@ -9,6 +11,8 @@ Install dependencies and run the app:
 ```bash
 $ npm i
 $ node . [port]
+# Optionally check out the solution branch
+$ git checkout solution
 ```
 
 The app expects an environment variable to be set containing a secret, so that we can sign the JWT:
@@ -21,7 +25,7 @@ Replace `<your secret string>` with your secret string. [Inspiration here](https
 
 ## Presentation
 
-The code class presentation about JWT, its features, uses and caveats in Markdown format can be found [here](presentation.md).
+[Get the code class presentation here in Markdown format](presentation.md).
 
 ## Exercises
 
